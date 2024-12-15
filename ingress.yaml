@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: php-ingress
+  namespace: cbt-namespace
+  annotations:
+  ## code yang menuju keberhasilan
+#    traefik.ingress.kubernetes.io/router.entrypoints: web
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: cookie
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.httpOnly: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.sameSite: "Lax"
+    # service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-type: "cookies"
+    # service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-name: "example"
+    # service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: php
+            port:
+              name: web

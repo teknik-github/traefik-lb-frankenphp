@@ -1,0 +1,81 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cbt-namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  namespace: cbt-namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+      containers:
+        - name: php
+          image: teknikhub/frankenphp
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: FRANKENPHP_CONFIG
+#              value: "worker /app/public/worker.php"
+            - name: SERVER_NAME
+              value: ":80"
+          ports:
+            - name: web
+              containerPort: 80
+          volumeMounts:
+            - name: php-code
+              mountPath: /app/public
+      volumes:
+        - name: php-code
+          hostPath:
+            path: /home/ubuntu/kubernetes/cbt-smkdone
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+  namespace: cbt-namespace
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-type: "cookies"
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-name: "example"
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: cookie
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+  selector:
+    app: php
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-hpa
+  namespace: cbt-namespace
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php
+  minReplicas: 3 # replica awal
+  maxReplicas: 5 # maksimal replica yang akan di buat
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 30 #jika cpu lebih dari 30% akan dibuatkan pod baru
