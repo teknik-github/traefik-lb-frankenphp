@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer-service # This is the service that will expose the Adminer pod to the internet
+  namespace: default
+spec:
+  selector:
+    app: adminer
+  ports:
+  - port: 8089
+    targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik # This is the service that will expose the Traefik pod to the internet
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik # This is the annotation that will enable Traefik to route traffic to the Traefik service
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: cookie # This is the annotation that will enable sticky sessions for the Traefik service
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true" 
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-type: "cookies"  
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-name: "example"
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.httpOnly: "true"
+    traefik.ingress.kubernetes.io/affinity: "true"
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: traefik
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-dashboard # This is the service that will expose the Traefik dashboard to the internet
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: traefik
+  type: LoadBalancer

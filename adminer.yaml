@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: adminer
-  namespace: cbt-namespace
+  namespace: default
 spec:
   selector:
     matchLabels:
-      app: adminer
+       app: adminer
   template:
     metadata:
       labels:
@@ -14,25 +14,13 @@ spec:
     spec:
       containers:
       - name: adminer
-        image: adminer
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "100m"
+        image: adminer # This is the deployment that will create the Adminer pod to manage the database
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "100m"
         ports:
         - containerPort: 8080
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: adminer-service
-  namespace: cbt-namespace
-spec:
-  selector:
-    app: adminer
-  ports:
-  - port: 8089
-    targetPort: 8080
-  type: LoadBalancer
+
 

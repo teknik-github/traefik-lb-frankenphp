@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb
-  namespace: cbt-namespace
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -16,7 +16,7 @@ spec:
       containers:
         - name: mariadb
           image: mariadb:latest
-          env:
+          env: # This is the environment variables that will be used to configure the MariaDB pod
             - name: MARIADB_ROOT_PASSWORD
               value: "1pai9mpl"
             - name: MARIADB_DATABASE
@@ -25,17 +25,17 @@ spec:
             - containerPort: 3306
           volumeMounts:
             - name: mariadb-data
-              mountPath: /var/lib/mysql
+              mountPath: /var/lib/mysql 
       volumes:
         - name: mariadb-data
           hostPath:
-            path: /home/ubuntu/kubernetes/database
+            path: /home/ubuntu/kubernetes/Traefik-lb-frankenphp/database # Change this path to the path of the directory where you want to store the database data
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mariadb
-  namespace: cbt-namespace
+  namespace: default
 spec:
   ports:
     - port: 3306

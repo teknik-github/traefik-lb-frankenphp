@@ -1,7 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
+resources: # This is the list of resources that Kustomize will apply
 - deployment.yaml
+- service.yaml
+- adminer.yaml
 - ingress.yaml
 - mariadb.yaml
 - account.yaml

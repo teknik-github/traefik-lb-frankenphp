@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: php-ingress
-  namespace: cbt-namespace
+  name: php-ingress 
+  namespace: default
   annotations:
   ## code yang menuju keberhasilan
 #    traefik.ingress.kubernetes.io/router.entrypoints: web
@@ -16,12 +16,12 @@ metadata:
     # service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
 spec:
   rules:
-  - http:
+  - http: # This is the rule that will route traffic to the PHP service
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: php
+            name: php # This is the name of the PHP service
             port:
               name: web
