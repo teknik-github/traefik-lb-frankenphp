@@ -26,10 +26,15 @@ spec:
           volumeMounts:
             - name: mariadb-data
               mountPath: /var/lib/mysql 
+            - name: mariadb-config
+              mountPath: /etc/mysql/my.cnf:ro
       volumes:
         - name: mariadb-data
           hostPath:
             path: /home/ubuntu/kubernetes/Traefik-lb-frankenphp/database # Change this path to the path of the directory where you want to store the database data
+        - name: mariadb-config
+          hostPath:
+            path: /home/ubuntu/kubernetes/Traefik-lb-frankenphp/config/my.cnf # Change this path to the path of the directory where you have your MariaDB configuration file
 ---
 apiVersion: v1
 kind: Service
