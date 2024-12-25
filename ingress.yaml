@@ -16,7 +16,8 @@ metadata:
     # service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
 spec:
   rules:
-  - http: # This is the rule that will route traffic to the PHP service
+  - host: php.localhost.local
+    http: # This is the rule that will route traffic to the PHP service
       paths:
       - path: /
         pathType: Prefix
