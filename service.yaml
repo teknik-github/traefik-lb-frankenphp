@@ -1,3 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer-service # This is the service that will expose the Adminer pod to the internet
+  namespace: default
+spec:
+  selector:
+    app: adminer
+  ports:
+  - port: 8089
+    targetPort: 8080
+  type: LoadBalancer
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,16 +29,12 @@ metadata:
     traefik.ingress.kubernetes.io/affinity: "true"
 spec:
   ports:
-    - name: web
-      port: 80
+    - port: 80
       targetPort: 80
-    - name: adminer
-      port: 8089
+    - port: 8089
       targetPort: 8080
-    - name: dashboard
-      port: 8080
-      targetPort: 8080
-  selector: {}
+  selector:
+    app: traefik
   type: LoadBalancer
 ---
 apiVersion: v1
