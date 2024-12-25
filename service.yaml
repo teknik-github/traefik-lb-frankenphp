@@ -27,23 +27,28 @@ metadata:
     service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-cookie-ttl: "60"
     traefik.ingress.kubernetes.io/service.sticky.cookie.httpOnly: "true"
     traefik.ingress.kubernetes.io/affinity: "true"
+    metallb.universe.tf/loadBalancerIPs: 192.168.20.27
 spec:
   ports:
-    - port: 80
+    - name: web
+      port: 80
       targetPort: 80
-  selector:
-    app: traefik
-  type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: traefik-dashboard # This is the service that will expose the Traefik dashboard to the internet
-  namespace: default
-spec:
-  ports:
-    - port: 8080
+    - name: dashboard
+      port: 8080
       targetPort: 8080
   selector:
     app: traefik
   type: LoadBalancer
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: traefik-dashboard # This is the service that will expose the Traefik dashboard to the internet
+#   namespace: default
+# spec:
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#   selector:
+#     app: traefik
+#   type: LoadBalancer
