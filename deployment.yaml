@@ -75,10 +75,13 @@ spec:
     name: php
   minReplicas: 3 # replica awal
   maxReplicas: 5 # maksimal replica yang akan di buat
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 3600 # 1 hour
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 30 #jika cpu lebih dari 30% akan dibuatkan pod baru
+          averageUtilization: 30 # jika cpu lebih dari 30% akan dibuatkan pod baru
