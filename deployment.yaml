@@ -24,8 +24,11 @@ spec:
           image: teknikhub/frankenphp # This is the deployment that will create the PHP pod
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "200m"
+              memory: "521Mi"
+              cpu: "500m"
+            requests:
+              memory: "64Mi"
+              cpu: "300m"
           env:
             - name: FRANKENPHP_CONFIG
 #              value: "worker /app/public/worker.php"
