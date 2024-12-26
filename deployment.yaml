@@ -73,15 +73,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: php
-  minReplicas: 3 # replica awal
-  maxReplicas: 5 # maksimal replica yang akan di buat
+  minReplicas: 3
+  maxReplicas: 5
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 3600 # 1 hour
+      stabilizationWindowSeconds: 3600 # Stabilization untuk mencegah pengurangan replica terlalu cepat
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 30 # jika cpu lebih dari 30% akan dibuatkan pod baru
+          averageUtilization: 30 # Tambah pod jika rata-rata penggunaan CPU > 30%
