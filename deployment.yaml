@@ -31,7 +31,7 @@ spec:
               cpu: "50m"
           env:
             - name: FRANKENPHP_CONFIG
-              value: "worker /app/public/worker.php"
+#              value: "worker /app/public/worker.php"
             - name: SERVER_NAME
               value: ":80"
           ports:
